@@ -115,8 +115,7 @@ export default {
     whiteboard: Whiteboard,
     chat,
     pdf: pdf,
-    user,
-    video
+    user
   },
   data () {
       return {
