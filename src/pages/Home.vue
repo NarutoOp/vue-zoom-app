@@ -32,6 +32,37 @@
           </div>
         </div>
       </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Teacher LR</span>
+        </template>
+        <div>
+          <div style="height:86vh;overflow:auto;">
+            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQHqWZnNqbzh0NUJ9dICtclzUQRai0jd11EuCEacPKsF0ScHeQwz2rjBUJyylCTiMSf_dvQuYXgdtxN/embed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Student LR</span>
+        </template>
+        <div>
+          
+          <div style="height:86vh;overflow:auto;">
+            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQHqWZnNqbzh0NUJ9dICtclzUQRai0jd11EuCEacPKsF0ScHeQwz2rjBUJyylCTiMSf_dvQuYXgdtxN/embed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Browser</span>
+        </template>
+        <div>
+          <div style="height:86vh;overflow:auto;">
+            <iframe src="https://www.bing.com" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+        </div>
+      </b-tab>
     </b-tabs></div>
   </pane>
   <pane size="25">
