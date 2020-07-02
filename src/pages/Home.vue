@@ -38,7 +38,7 @@
   <splitpanes horizontal>
     <pane size="30" style="border: 3px solid;">
       <panel title="Video" bodyClass="p-0">
-      <div style="height:30vh;overflow:auto;"     
+      <div style="height:30vh;overflow:auto;">   
         <vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />
       </div> 
       </panel> 
