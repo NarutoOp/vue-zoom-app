@@ -37,7 +37,8 @@
   <pane size="25">
   <splitpanes horizontal>
     <pane size="30" style="border: 3px solid">
-      <panel title="Video" bodyClass="h">
+      <panel title="Video">
+        <vue-webrtc ref="webrtc" width="100%" roomId="sample-room"/> 
       </panel> 
     </pane>
     <pane min-size="70" max-size="70" size="70">
@@ -62,12 +63,17 @@
 </template>
 
 <script>
+import video from './example.vue';
 import { Splitpanes, Pane } from "splitpanes"
 import 'splitpanes/dist/splitpanes.css'
 import Whiteboard from "@/components/WhiteBoard.vue";
 import chat from "./chat.vue";
 import pdf from 'vue-pdf'
 import user from './user.vue'
+
+import WebRTC from 'vue-webrtc'
+import * as io from 'socket.io-client'
+window.io = io
 
 export default {
   props: ['name'],
@@ -77,7 +83,8 @@ export default {
     whiteboard: Whiteboard,
     chat,
     pdf: pdf,
-    user
+    user,
+    video
   },
   data () {
       return {
@@ -90,6 +97,9 @@ export default {
 
           console.log(err);
       }
+  },
+  mounted: function () {
+    this.$refs.webrtc.join()
   }
 };
 </script>
