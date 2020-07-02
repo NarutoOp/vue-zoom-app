@@ -36,9 +36,11 @@
   </pane>
   <pane size="25">
   <splitpanes horizontal>
-    <pane size="30" style="border: 3px solid">
-      <panel title="Video">
-        <vue-webrtc ref="webrtc" width="100%" roomId="sample-room"/> 
+    <pane size="30" style="border: 3px solid;">
+      <panel title="Video" bodyClass="p-0">
+      <div style="height:30vh;overflow:auto;"     
+        <vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />
+      </div> 
       </panel> 
     </pane>
     <pane min-size="70" max-size="70" size="70">
