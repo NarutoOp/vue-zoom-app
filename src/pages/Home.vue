@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import video from './example.vue';
 import { Splitpanes, Pane } from "splitpanes"
 import 'splitpanes/dist/splitpanes.css'
 import Whiteboard from "@/components/WhiteBoard.vue";
