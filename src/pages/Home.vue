@@ -3,12 +3,12 @@
 <splitpanes class="default-theme" style="height: 100vh;">
   <pane min-size="30" max-size="80" size="75">
     <div class="container-fluid p-0">
-    <b-tabs style="border: 3px solid">
+    <b-tabs content-class="p-0" style="border: 3px solid">
       <b-tab active>
         <template slot="title">
           WhiteBoard
         </template>
-        <whiteboard></whiteboard>
+          <whiteboard></whiteboard>
       </b-tab>
       <b-tab style="border: 3px solid">
         <template slot="title">
@@ -70,7 +70,7 @@
     <pane size="30" style="border: 3px solid;">
       <panel title="Video" bodyClass="p-0">
       <div style="height:30vh;overflow:auto;text-align: center;">   
-        <vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />
+        <!--<vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />-->
       </div> 
       </panel> 
     </pane>

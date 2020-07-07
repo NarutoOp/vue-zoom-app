@@ -27,7 +27,7 @@ export default {
 
 <style lang="scss">
 canvas {
-  height: 90vh;
+  height: 95vh;
   width: 100%;
   background: #133337;
 }
