@@ -52,12 +52,13 @@
           class="settingsColorPicker"
           slot="settingsColorPicker"
           :colors="colors"
+          style="width:270px;"
         />
         <!-- Slider -->
         <rangeSlider
           :onChange="setToolSize"
           :min="0"
-          :max="6"
+          :max="24"
           :value="toolSize"
           class="settingsSlider"
           slot="slider"
@@ -119,7 +120,7 @@
         <rangeSlider
           :onChange="setShapeSize"
           :min="0"
-          :max="6"
+          :max="24"
           :value="shapeSize"
           class="settingsSlider"
           slot="slider"
