@@ -12,7 +12,7 @@
       <!-- Eraser select -->
       <panelToolIcon
         @click.native="toggleEraserSettings(); setWhiteboardTool('eraser')"
-        toolColor="#133337"
+        toolColor="erasorColor"
         :isActive="tool === 'eraser'"
         icon="eraser"
       />
@@ -230,6 +230,9 @@ export default {
     },
     eraserSize: function() {
       return this.$store.getters.eraserArgs.size;
+    },
+    eraserColor: function() {
+      return this.$store.getters.eraserArgs.color;
     },
     shapeSize: function() {
       return this.$store.getters.shapeArgs.size;

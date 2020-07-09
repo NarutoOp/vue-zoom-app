@@ -29,7 +29,7 @@ export default {
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 170px;
+  bottom: 20px;
   left: 10px;
   padding: 10px;
   background: #fff;
