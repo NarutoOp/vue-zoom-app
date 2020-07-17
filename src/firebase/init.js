@@ -1,7 +1,7 @@
 import firebase from 'firebase'
 
 var firebaseConfig = {
-    apiKey: "AIzaSyDBCPaybkZb84JjQOQMFyvqwETvray3O-Q",
+    apiKey: "",
     authDomain: "fir-01-5bbfd.firebaseapp.com",
     databaseURL: "https://fir-01-5bbfd.firebaseio.com",
     projectId: "fir-01-5bbfd",
