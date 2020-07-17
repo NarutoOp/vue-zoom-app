@@ -20,4 +20,4 @@ yarn-error.log*
 *.sln
 *.sw*
 
-src/firebase
+src/firebase/init.js
