@@ -1,6 +1,6 @@
 <template>
 <div class="hat">
-<b-table sticky-header="62vh" striped :items="users" thead-class="hidden_header">
+<b-table sticky-header="62vh" striped :items="users" thead-class="hidden_header" style="height:63vh;">
 </b-table>
 </div>
 </template>
@@ -27,7 +27,5 @@ export default {
 .hidden_header {
   display: none;
 }
-.b-table {
-    height:63vh;
-}
+
 </style>

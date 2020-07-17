@@ -1,79 +1,199 @@
 <template>
-	<div class="container mt-5">
-		<div class="row">
-			<div class="col-lg-8">
-				<b-tabs>
-					<b-tab active>
-						<template slot="title">
-							<span class="d-sm-none">Tab 1</span>
-							<span class="d-sm-block d-none">WhiteBoard</span>
-						</template>
-						<whiteboard></whiteboard>
-					</b-tab>
-					<b-tab>
-						<template slot="title">
-							<span class="d-sm-none">Tab 2</span>
-							<span class="d-sm-block d-none">Student PDF</span>
-						</template>
-						
-						<blockquote>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-							<small>Someone famous in <cite title="Source Title">Source Title</cite></small>
-						</blockquote>
-						<h4>Lorem ipsum dolor sit amet</h4>
-						<p>
-							Nullam ac sapien justo. Nam augue mauris, malesuada non magna sed, feugiat blandit ligula. 
-							In tristique tincidunt purus id iaculis. Pellentesque volutpat tortor a mauris convallis, 
-							sit amet scelerisque lectus adipiscing.
-						</p>
-					</b-tab>
-					<b-tab>
-						<template slot="title">
-							<span class="d-sm-none">Tab 3</span>
-							<span class="d-sm-block d-none">Browser</span>
-						</template>
-						
-						<p>
-							<span class="fa-stack fa-4x pull-left m-r-10">
-								<i class="fa fa-square-o fa-stack-2x"></i>
-								<i class="fab fa-twitter fa-stack-1x"></i>
-							</span>
-							Praesent tincidunt nulla ut elit vestibulum viverra. Sed placerat magna eget eros accumsan elementum. 
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam quis lobortis neque. 
-							Maecenas justo odio, bibendum fringilla quam nec, commodo rutrum quam. 
-							Donec cursus erat in lacus congue sodales. Nunc bibendum id augue sit amet placerat. 
-							Quisque et quam id felis tempus volutpat at at diam. Vivamus ac diam turpis.Sed at lacinia augue. 
-							Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla. 
-							Quisque adipiscing dui nec orci fermentum blandit.
-							Sed at lacinia augue. Nulla facilisi. Fusce at erat suscipit, dapibus elit quis, luctus nulla. 
-							Quisque adipiscing dui nec orci fermentum blandit.
-						</p>
-					</b-tab>
-				</b-tabs>
-			</div>
-			<div class="col-lg-4">
-				<panel title="Video">
-					<div slot="outsideBody">div class="alert alert-success fade show"&gt;
-					  &lt;span class="close" data-dismiss="alert"&gt;&times;&lt;/span&gt;
-					  &lt;strong&gt;Success!&lt;/strong&gt;
-					  This is a success alert with 
-					  &lt;a href="#" class="alert-link"&gt;an example link&lt;/a&gt;. 
-					</div>
-				</panel>
-				<chat></chat>
-			</div>
-		</div>
-		<!-- end row -->
-	</div>
+  <div class="container mt-5">
+    <b-button v-b-modal.modal-prevent-closing>Create Classroom</b-button>
+    <panel v-if="LiveLectures.length > 0" class="mt-3" title="Create Live Lecture" noButton="true">
+	    <div class="mt-2">
+	      <b-table responsive bordered sticky-header striped :fields="fields" :items="LiveLectures">
+	      	<template v-slot:cell(Sr)="data">
+		        {{ data.index + 1 }}
+		    </template>
+
+		    <template v-slot:cell(Link)>
+		        <a href="">{{fullUrl}}</a>
+		        <input type="text" hidden ref="hiddenURL">
+		    </template>
+
+		    <template v-slot:cell(StudentName)="datas">
+		        <div v-for="data in datas.value">
+		        	{{data}}
+		       	</div>
+		    </template>
+
+		  </b-table>
+	    </div>
+	</panel>
+
+    <b-modal
+      id="modal-prevent-closing"
+      ref="modal"
+      title="Create Classroom"
+      @show="resetModal"
+      @hidden="resetModal"
+      @ok="handleOk"
+    >
+      <b-form ref="form" @submit.stop.prevent="handleOk">
+	    <b-form-group
+	        id="input-group-1"
+	        label="Lecture Name"
+	        label-for="input-1"
+	        description="Create Unique lecture name."
+	    >
+	        <b-form-input
+	          id="input-1"
+	          v-model="name"
+	          placeholder="Enter Lecture Name"
+	          required
+	        ></b-form-input>
+	    </b-form-group>
+
+	    <b-form-group id="input-group-2" label="Professor Name" label-for="input-2">
+	        <b-form-input
+	          id="input-2"
+	          v-model="ProfessorName"
+	          required
+	          placeholder="Enter Professor Name"
+	        ></b-form-input>
+	    </b-form-group>
+
+	    <b-form-group label="Choose a Date">
+    		<b-form-datepicker v-model="ScheduledDate" class="mb-2"></b-form-datepicker>
+    	</b-form-group>
+    	
+    	<b-form-group label="Choose a Time">
+    		<b-form-timepicker v-model="ScheduledTime" locale="en"></b-form-timepicker>
+    	</b-form-group>
+
+	    <b-form-group label="Student Name">
+	        <b-form-tags
+	          v-model="StudentName" add-on-change no-outer-focus class="mb-2">
+
+	        	<template v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }">
+		          <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
+		            <li v-for="tag in tags" :key="tag" class="list-inline-item">
+		              <b-form-tag
+		                @remove="removeTag(tag)"
+		                :title="tag"
+		                :disabled="disabled"
+		                variant="info"
+		              >{{tag}}</b-form-tag>
+		            </li>
+		          </ul>
+		          <b-form-select
+		            v-bind="inputAttrs"
+		            v-on="inputHandlers"
+		            :disabled="disabled || availableOptions.length === 0"
+		            :options="availableOptions"
+		          >
+		            <template v-slot:first>
+		              
+		              <option disabled value="">Choose a Student...</option>
+		            </template>
+		          </b-form-select>
+		        </template>
+
+	        </b-form-tags>
+	    </b-form-group>
+      </b-form>
+    </b-modal>
+  </div>
 </template>
 
 <script>
-import Whiteboard from "@/components/WhiteBoard.vue";
-import chat from "./chat.vue";
-export default {
-  components: {
-    whiteboard: Whiteboard,
-    chat
+import firebase from 'firebase';
+import fb from '@/firebase/init';
+import moment from 'moment';
+  export default {
+    data() {
+      return {
+      	fields: [{ key: 'Sr', label: '' },'LectureName','ProfessorName','StudentName','ScheduledDate','ScheduledTime','timestamp','Link'],
+        LiveLectures : [],
+        name: '',
+        ProfessorName: '',
+        StudentName : [],
+        timestamp : '',
+
+        ScheduledDate: '',
+        ScheduledTime: '',
+	    
+	    fullUrl : '',
+
+        options: ['Arpit Gupta', 'Sujal Gupta', 'MS Dhoni', 'Naruto Uzumaki', 'Lelouch Brittania', 'hIDEKI ryuga', 'Demon Slayer'],
+        option : []
+      }
+    },
+    computed: {
+      availableOptions() {
+        return this.option
+      }
+    },
+    methods: {
+      resetModal(bvModalEvt) {
+        this.name = ''
+        this.ProfessorName = ''
+        this.StudentName = ''
+        this.timestamp = ''
+        this.ScheduledDate = ''
+        this.ScheduledTime = ''
+      },
+      handleOk(bvModalEvt) {
+        bvModalEvt.preventDefault();
+
+        const Lectures = firebase.functions().httpsCallable('createLectures');
+
+	  	Lectures({ LectureName:this.name,ProfessorName:this.ProfessorName,StudentName:this.StudentName,ScheduledDate: this.ScheduledDate,ScheduledTime :this.ScheduledTime,timestamp:Date.now() }) 
+  		.then(() => {
+  			console.log('successful');
+  		})
+  		.catch(err => console.log(err));
+
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-prevent-closing')
+        })
+      },
+
+      path(){
+           const path = this.$router.resolve({
+		      name:'Login'
+		    }).href;
+		    this.fullUrl = window.location.origin +'/'+ path   
+      },
+
+
+	  showLecture() {
+
+	  	let ref = fb.collection('LiveLectures').orderBy('timestamp');
+	      ref.onSnapshot(snapshot => {
+	          snapshot.docChanges().forEach(change => {
+	              if (change.type == 'added') {
+	                  let doc = change.doc;
+	                  this.LiveLectures.push({
+	                      LectureName: doc.data().LectureName,
+	                      ProfessorName: doc.data().ProfessorName,
+	                      StudentName: doc.data().StudentName,
+	                      ScheduledDate: doc.data().ScheduledDate,
+	                      ScheduledTime: doc.data().ScheduledTime,
+	                      timestamp: moment(doc.data().timestamp).format('LTS')
+	                  });
+	              }
+	          });
+	      });
+	  },
+
+
+	  getOptions() {
+	  	const student = firebase.functions().httpsCallable('getStudents');
+	  	student().then(result => {
+	  		this.option = result.data;
+	  	})
+	  	.catch(err => console.log(err));
+	  }
+
+    },
+    mounted() {
+    	this.path()	
+    	this.showLecture()
+    	this.getOptions()
+    },
+    
   }
-};
 </script>

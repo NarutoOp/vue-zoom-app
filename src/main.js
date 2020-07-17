@@ -19,6 +19,7 @@ import VueMaskedInput from 'vue-maskedinput'
 import VueInputTag from 'vue-input-tag'
 import VueCountdown from '@xkeshi/vue-countdown';
 import VueChatScroll from 'vue-chat-scroll';
+import panZoom from 'vue-panzoom'
 
 import './config/fontawesome';
 
@@ -63,6 +64,8 @@ Vue.use(VueHljs)
 Vue.use(VueSweetalert2)
 Vue.use(VueNotification)
 Vue.use(VuePanel)
+Vue.use(panZoom)
+
 Vue.use(VueInsProgressBar, {
   position: 'fixed',
   show: true,

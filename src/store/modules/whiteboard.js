@@ -7,8 +7,8 @@ const state = {
         color: '#000000'
     },
     bgArgs: {
-        size: 2,
-        color: '#133337'
+        color: '#133337',
+        img : ''
     },
     eraserArgs: {
         size: 2,
@@ -27,6 +27,9 @@ const mutations = {
     },
     'SET_BG_COLOR'(state, toolColor) {
         state.bgArgs.color = toolColor;
+    },
+    'SET_BG_IMG'(state, img) {
+        state.bgArgs.img = img;
     },
     'SET_TOOL_SIZE'(state, toolSize) {
         state.toolArgs.size = toolSize;
@@ -67,6 +70,12 @@ const actions = {
         commit
     }, toolColor) => {
         commit('SET_BG_COLOR', toolColor);
+    },
+
+    setbgImg: ({
+        commit
+    }, img) => {
+        commit('SET_BG_IMG', img);
     },
 
     setToolSize: ({
