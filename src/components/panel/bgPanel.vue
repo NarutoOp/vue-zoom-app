@@ -11,6 +11,11 @@
       toolColor="#133337"
       icon="image"
     />
+    <panelToolIcon
+      @click.native="setGrid"
+      toolColor="#133337"
+      icon="th"
+    />
 
 	</div>
 
@@ -40,6 +45,7 @@
 </template>
 
 <script>
+import grid from "../page_component/grid.js"
 import PanelToolIcon from "./PanelToolIcon";
 import ColorPicker from "./../ColorPicker";
 import colorPalette from "../../config/colorPalette.js";
@@ -58,7 +64,8 @@ export default {
    			isToolSettingsOpened: false,
 		    bgcolors: colorPalette,
 		    isBgOpened: false,
-        image:''
+        image:'',
+        active: true
     	}
     },
     methods : {
@@ -100,6 +107,16 @@ export default {
       removeImage: function () {
         this.image = ''
         this.$store.dispatch("setbgImg",this.image);
+      },
+      setGrid() {
+        
+        if (this.active == true){
+          grid.createLine();
+        }
+        else if(this.active == false){
+          grid.removegrid();
+        }
+        this.active = !this.active;
       },
     },
     computed: {

@@ -1,14 +1,15 @@
 <template>
 <div class="container-fluid p-0">
+<b-overlay :show="show" rounded="sm" @shown="onShown" @hidden="onHidden">
 <splitpanes class="default-theme" style="height: 100vh;">
-  <pane min-size="30" max-size="80" size="75">
+  <pane min-size="60" max-size="100" size="75">
     <div class="container-fluid p-0">
     <b-tabs content-class="p-0" style="border: 3px solid">
       <b-tab active>
         <template slot="title">
           WhiteBoard
         </template>
-          <whiteboard></whiteboard>
+          <whiteboard Id="whiteboard"></whiteboard>
       </b-tab>
       <b-tab style="border: 3px solid">
         <template slot="title">
@@ -61,6 +62,9 @@
           </div>
         </div>
       </b-tab>
+      <template v-slot:tabs-end>
+          <b-nav-item :disabled="show" v-b-tooltip.hover title="End Session" @click.prevent="show = true"><b class="text-danger">x</b></b-nav-item>
+      </template>
     </b-tabs></div>
   </pane>
   <pane size="25">
@@ -68,7 +72,7 @@
     <pane size="30" style="border: 3px solid;">
       <panel title="Video" bodyClass="p-0">
       <div style="height:30vh;overflow:auto;text-align: center;">   
-        <!--<vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />-->
+        <vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />
       </div> 
       </panel> 
     </pane>
@@ -90,7 +94,35 @@
     </pane>
   </splitpanes>
   </pane>
-</splitpanes></div>
+</splitpanes>
+
+  <template v-slot:overlay>
+    <div class="text-center">
+      <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
+      <p id="cancel-label">Please wait...</p>
+
+      <b-button
+        ref="Exit"
+        variant="outline-primary"
+        size="sm"
+        @click="$router.push({name: 'Login'})"
+        class="mr-3"
+      >
+        Confirm
+      </b-button>
+      <b-button
+        ref="cancel"
+        variant="outline-danger"
+        size="sm"
+        aria-describedby="cancel-label"
+        @click="show = false"
+      >
+        Cancel
+      </b-button>
+    </div>
+  </template>
+</b-overlay>
+</div>
 </template>
 
 <script>
@@ -119,12 +151,21 @@ export default {
       return {
           page: 1,
           numPages: 0,
+          show:false
       }
   },
   methods: {
       error: function(err) {
 
           console.log(err);
+      },
+      onShown() {
+        // Focus the cancel button when the overlay is showing
+        this.$refs.cancel.focus()
+      },
+      onHidden() {
+        // Focus the show button when the overlay is removed
+        this.$refs.show.focus()
       }
   },
   mounted: function () {

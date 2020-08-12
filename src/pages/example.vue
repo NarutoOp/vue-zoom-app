@@ -1,165 +1,215 @@
 <template>
-  <div class="container mt-5">
-    <b-button v-b-modal.modal-prevent-closing>Create Classroom</b-button>
-    <panel v-if="LiveLectures.length > 0" class="mt-3" title="Create Live Lecture" noButton="true">
-	    <div class="mt-2">
-	      <b-table responsive bordered sticky-header="20vh" striped :fields="fields" :items="LiveLectures">
-	      	<template v-slot:cell(Sr)="data">
-		        {{ data.index + 1 }}
-		    </template>
+<div class="container-fluid p-0">
+<b-overlay :show="show" rounded="sm" @shown="onShown" @hidden="onHidden">
+<splitpanes class="default-theme" style="height: 100vh;">
+  <pane min-size="60" max-size="100" size="75">
+    <div class="container-fluid p-0">
+    <b-tabs content-class="p-0" style="border: 3px solid">
+      <b-tab active>
+        <template slot="title">
+          WhiteBoard
+        </template>
 
-		    <template v-slot:cell(Link)>
-		        <a :href="fullUrl" @click.prevent.stop="onClick(fullUrl)">{{fullUrl}}</a>
-		        <input type="text" hidden ref="hiddenURL">
-		    </template>
+        <b-tabs class="p-0" content-class="p-0" vertical>
+        	<b-tab active title="tab">
+        		<whiteboard Id="whiteboard"></whiteboard>
+        	</b-tab>
+	        <b-tab v-for="i in tabs" :key="'dyn-tab-' + i" :title="'Tab ' + i">
 
-		    <template v-slot:cell(StudentName)="datas">
-		        <div v-for="data in datas.value">
-		        	{{data}}
-		       	</div>
-		    </template>
+	          <whiteboard Id="'whiteboard' + i"></whiteboard>
+	        </b-tab>
 
-		  </b-table>
-	    </div>
-	</panel>
+	        <!-- New Tab Button (Using tabs-end slot) -->
+	        <template v-slot:tabs-end>
+	          <b-nav-item role="presentation" @click.prevent="newTab" href="#"><b>+</b></b-nav-item>
+	        </template>
+	      </b-tabs>
+ 
 
-    <b-modal
-      id="modal-prevent-closing"
-      ref="modal"
-      title="Create Classroom"
-      @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
-      <b-form ref="form" @submit.stop.prevent="handleSubmit">
-	    <b-form-group
-	        id="input-group-1"
-	        label="Lecture Name"
-	        label-for="input-1"
-	        description="Create Unique lecture name."
-	    >
-	        <b-form-input
-	          id="input-1"
-	          v-model="name"
-	          placeholder="Enter Lecture Name"
-	          required
-	        ></b-form-input>
-	    </b-form-group>
+          
+      </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Student PDF</span>
+        </template>
+        <div>
+          <input v-model.number="page" type="number" style="width: 5em"> /{{numPages}}
+          <div style="height:95vh;overflow:auto;">
+              <pdf ref="pdf" :src="'https://cdn.rawgit.com/mozilla/pdf.js/c6e8ca86/test/pdfs/annotation-link-text-popup.pdf'" :page="page" @error="error" @num-pages="numPages = $event" @link-clicked="page = $event"></pdf>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Teacher PDF</span>
+        </template>
+          <input v-model.number="page" type="number" style="width: 5em"> /{{numPages}}
+          <div style="height:95vh;overflow:auto;">
+            <pdf ref="pdf" :src="'https://cdn.rawgit.com/mozilla/pdf.js/c6e8ca86/test/pdfs/annotation-link-text-popup.pdf'" :page="page" @error="error" @num-pages="numPages = $event" @link-clicked="page = $event"></pdf>
+          </div>
+      </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Teacher LR</span>
+        </template>
+        <div>
+          <div style="height:94vh;">
+            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQHqWZnNqbzh0NUJ9dICtclzUQRai0jd11EuCEacPKsF0ScHeQwz2rjBUJyylCTiMSf_dvQuYXgdtxN/embed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab style="border: 3px solid">
+        <template slot="title">
+          <span class="d-sm-block d-none">Student LR</span>
+        </template>
+        <div>
+          
+          <div style="height:94vh">
+            <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQHqWZnNqbzh0NUJ9dICtclzUQRai0jd11EuCEacPKsF0ScHeQwz2rjBUJyylCTiMSf_dvQuYXgdtxN/embed?start=false&loop=false&delayms=3000" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+        </div>
+      </b-tab>
+      <b-tab>
+        <template slot="title">
+          <span class="d-sm-block d-none">Browser</span>
+        </template>
+        <div>
+          <div style="height:95vh;overflow:auto;">
+            <iframe src="https://www.bing.com" frameborder="0" width="100%" height="100%" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+        </div>
+      </b-tab>
+      <template v-slot:tabs-end>
+          <b-nav-item :disabled="show" v-b-tooltip.hover title="End Session" @click.prevent="show = true"><b class="text-danger">x</b></b-nav-item>
+      </template>
+    </b-tabs></div>
+  </pane>
+  <pane size="25">
+  <splitpanes horizontal>
+    <pane size="30" style="border: 3px solid;">
+      <panel title="Video" bodyClass="p-0">
+      <div style="height:30vh;overflow:auto;text-align: center;">   
+        <!--<vue-webrtc ref="webrtc" width="100%" roomId="sample-room" />-->
+      </div> 
+      </panel> 
+    </pane>
+    <pane min-size="70" max-size="70" size="70">
+      <b-tabs active-nav-item-class="bg-primary text-white" fill content-class="p-0">
+        <b-tab>
+        <template slot="title">
+        <b>Chat</b>
+        </template>
+          <chat :name="name" />
+        </b-tab>
+        <b-tab>
+        <template slot="title">
+        <b>User</b>
+        </template>
+          <user />
+        </b-tab>
+      </b-tabs>
+    </pane>
+  </splitpanes>
+  </pane>
+</splitpanes>
 
-	    <b-form-group id="input-group-2" label="Professor Name" label-for="input-2">
-	        <b-form-input
-	          id="input-2"
-	          v-model="ProfessorName"
-	          required
-	          placeholder="Enter Professor Name"
-	        ></b-form-input>
-	    </b-form-group>
+  <template v-slot:overlay>
+    <div class="text-center">
+      <b-icon icon="stopwatch" font-scale="3" animation="cylon"></b-icon>
+      <p id="cancel-label">Please wait...</p>
 
-	    <b-form-group label="Choose a Date">
-    		<b-form-datepicker v-model="ScheduledDate" class="mb-2"></b-form-datepicker>
-    	</b-form-group>
-    	
-    	<b-form-group label="Choose a Time">
-    		<b-form-timepicker v-model="ScheduledTime" locale="en"></b-form-timepicker>
-    	</b-form-group>
-
-	    <b-form-group label="Student Name">
-	        <b-form-tags
-	          v-model="StudentName" add-on-change no-outer-focus class="mb-2">
-
-	        	<template v-slot="{ tags, inputAttrs, inputHandlers, disabled, removeTag }">
-		          <ul v-if="tags.length > 0" class="list-inline d-inline-block mb-2">
-		            <li v-for="tag in tags" :key="tag" class="list-inline-item">
-		              <b-form-tag
-		                @remove="removeTag(tag)"
-		                :title="tag"
-		                :disabled="disabled"
-		                variant="info"
-		              >{{tag}}</b-form-tag>
-		            </li>
-		          </ul>
-		          <b-form-select
-		            v-bind="inputAttrs"
-		            v-on="inputHandlers"
-		            :disabled="disabled || availableOptions.length === 0"
-		            :options="availableOptions"
-		          >
-		            <template v-slot:first>
-		              
-		              <option disabled value="">Choose a tag...</option>
-		            </template>
-		          </b-form-select>
-		        </template>
-
-	        </b-form-tags>
-	    </b-form-group>
-      </b-form>
-    </b-modal>
-  </div>
+      <b-button
+        ref="Exit"
+        variant="outline-primary"
+        size="sm"
+        @click="$router.push({name: 'Login'})"
+        class="mr-3"
+      >
+        Confirm
+      </b-button>
+      <b-button
+        ref="cancel"
+        variant="outline-danger"
+        size="sm"
+        aria-describedby="cancel-label"
+        @click="show = false"
+      >
+        Cancel
+      </b-button>
+    </div>
+  </template>
+</b-overlay>
+</div>
 </template>
 
 <script>
-import firebase from 'firebase';
-import moment from 'moment';
-  export default {
-    data() {
+import { Splitpanes, Pane } from "splitpanes"
+import 'splitpanes/dist/splitpanes.css'
+import Whiteboard from "@/components/WhiteBoard.vue";
+import chat from "./chat.vue";
+import pdf from 'vue-pdf'
+import user from './user.vue'
+
+import WebRTC from 'vue-webrtc'
+import * as io from 'socket.io-client'
+window.io = io
+
+export default {
+  props: ['name'],
+  components: {
+    Splitpanes,
+    Pane,
+    whiteboard: Whiteboard,
+    chat,
+    pdf: pdf,
+    user
+  },
+  data () {
       return {
-      	fields:[{ key: 'Sr', label: '' },,'name','ProfessorName','StudentName','timestamp','Link'],
-        LiveLectures : [],
-        name: '',
-        ProfessorName: '',
-        StudentName : [],
-        timestamp : '',
-        ScheduledDate: '',
-        ScheduledTime: '',
-        fullUrl : '',
-
-        options: ['Arpit Gupta', 'Sujal Gupta', 'MS Dhoni', 'Naruto Uzumaki', 'Lelouch Brittania', 'hIDEKI ryuga', 'Demon Slayer']
+          page: 1,
+          numPages: 0,
+          show:false,
+          tabs: [],
+          tabCounter: 0
       }
-    },
-    computed: {
-      availableOptions() {
-        return this.options
+  },
+  methods: {
+      error: function(err) {
+
+          console.log(err);
+      },
+      onShown() {
+        // Focus the cancel button when the overlay is showing
+        this.$refs.cancel.focus()
+      },
+      onHidden() {
+        // Focus the show button when the overlay is removed
+        this.$refs.show.focus()
+      },
+      closeTab(x) {
+        for (let i = 0; i < this.tabs.length; i++) {
+          if (this.tabs[i] === x) {
+            this.tabs.splice(i, 1)
+          }
+        }
+      },
+      newTab() {
+        this.tabs.push(this.tabCounter++)
       }
-    },
-    methods: {
-
-      resetModal(bvModalEvt) {
-        this.name = ''
-        this.ProfessorName = ''
-        this.StudentName = ''
-        this.timestamp = ''
-      },
-      handleOk(bvModalEvt) {
-        bvModalEvt.preventDefault()
-        this.handleSubmit()
-      },
-      handleSubmit() {
-      	this.LiveLectures.push({name:this.name,ProfessorName:this.ProfessorName,StudentName:this.StudentName,timestamp:moment(Date.now()).format('LTS')})
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-prevent-closing')
-        })
-      },
-      path(){
-           const path = this.$router.resolve({
-		      name:'Login'
-		    }).href;
-		    this.fullUrl = window.location.origin +'/'+ path   
-      },
-      onClick(url) {
-	      const input = this.$refs["hiddenURL"];
-	      input.value = url;
-	     
-	      input.select();
-	      document.execCommand("copy");
-	     
-	  },
-
-
-    },
-    mounted() {
-    	this.path()	
-    },
-    
+  },
+  mounted: function () {
+    this.$refs.webrtc.join()
   }
+};
 </script>
+
+<style>
+.splitpanes__pane {
+  position: relative;
+}
+.h {
+  height:30vh;
+}
+
+
+</style>
