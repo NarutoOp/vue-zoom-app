@@ -6,22 +6,22 @@ Now learning becomes easy and more friendly using our app, where we get total su
 
 ## Usability Features
 
-⚡️ Whiteboard with different features.
-⚡️ Web Cam Support
-⚡️ Virtual Classroom
-⚡️ Screen Share
-⚡ PPT and PDF Reader
+⚡️ Whiteboard with different features\
+⚡️ Web Cam Support\
+⚡️ Virtual Classroom\
+⚡️ Screen Share\
+⚡ PPT and PDF Reader\
 ⚡️ Browser integrated
 
 --
 
 ## Technical Features
 
-⚡️ Modern UI Design
+⚡️ Modern UI Design\
 ⚡️ Styled with Bootstrap v4.3 + Custom CSS\
 ⚡️ Fully Responsive\
 ⚡️ Valid HTML5 & CSS3\
-⚡ Made with VUE
+⚡ Made with VUE\
 ⚡️ Well organized documentation
 
 --
